@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:kisacaberkproje/login.dart';
+import 'package:kisacaberkproje/service/auth_service.dart';
 
 
 
@@ -15,13 +18,15 @@ class _kayitolState extends State<kayitol> {
   late String email,sifre,sifretekrar,kullaniciadi;
   bool yuklenmedurumu = false;
   var _biseyanahtari= GlobalKey<FormState>();
+  final TextEditingController _emailcontroller= TextEditingController();
+  final TextEditingController _sifrecontroller= TextEditingController();
+  final TextEditingController _kullanicicontroller= TextEditingController();
+  final TextEditingController _sehircontroller= TextEditingController();
   @override
 
   Widget build(BuildContext context) {
 
-    final TextEditingController _emailcontroller= TextEditingController();
-    final TextEditingController _sifrecontroller= TextEditingController();
-    final TextEditingController _kullanicicontroller= TextEditingController();
+
     var Ekranbilgisi = MediaQuery.of(context);
     final double Ekranyuksekligi = Ekranbilgisi.size.height;
     final double Ekrangenisligi = Ekranbilgisi.size.width;
@@ -62,7 +67,7 @@ class _kayitolState extends State<kayitol> {
                               ..color = Colors.white,
                             fontWeight: FontWeight.bold,fontFamily: "monalisa"),
                       ),
-                      // Solid text as fill.
+// Solid text as fill.
                       Text("Etkinliks",style: TextStyle(color: Color(0xff880E4F) ,fontWeight: FontWeight.bold,fontSize:70,fontFamily: "monalisa"),),
                     ],
                   ),
@@ -71,18 +76,19 @@ class _kayitolState extends State<kayitol> {
                 Form(
                   key: _biseyanahtari,
                   child: Container(
+
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          padding: const EdgeInsets.symmetric(vertical: 1.0),
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Color(0xff880E4F).withOpacity(0.95),
                                 borderRadius: BorderRadius.circular(35)),
                             child: TextFormField(
-                              // controller: _kullanicicontroller,
+                              controller: _kullanicicontroller,
                               decoration: InputDecoration(
                                   contentPadding:
                                   const EdgeInsets.symmetric(vertical: 20),
@@ -111,46 +117,48 @@ class _kayitolState extends State<kayitol> {
                             ),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xff880E4F).withOpacity(0.95),
-                              borderRadius: BorderRadius.circular(35)),
-                          child: TextFormField(
-                            // controller: _kullanicicontroller,
-                            decoration: InputDecoration(
-                                contentPadding:
-                                const EdgeInsets.symmetric(vertical: 20),
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
-                                  child: Icon(Icons.navigation),
-                                ),
-                                border: InputBorder.none,
-                                hintText: "Şehrinizi Yazın",
-                                hintStyle: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                )),
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Color(0xff880E4F).withOpacity(0.95),
+                                borderRadius: BorderRadius.circular(35)),
+                            child: TextFormField(
+                              controller: _sehircontroller,
+                              decoration: InputDecoration(
+                                  contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 20),
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: Icon(Icons.map),
+                                  ),
+                                  border: InputBorder.none,
+                                  hintText: "Şehir",
+                                  hintStyle: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  )),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              onChanged: (oge){
+                                setState(() {
+                                  kullaniciadi = oge;
+                                });
+                              },
                             ),
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            onChanged: (oge){
-                              setState(() {
-                                kullaniciadi = oge;
-                              });
-                            },
                           ),
                         ),
-                        SizedBox(height: Ekranyuksekligi/50,),
                         Container(
                           decoration: BoxDecoration(
                               color: Color(0xff880E4F).withOpacity(0.95),
                               borderRadius: BorderRadius.circular(35)),
                           child: TextFormField(
-                            //   controller: _emailcontroller,
+                            controller: _emailcontroller,
                             validator: (oge){
                               return oge!.contains("@") ? null : "bir mail adresi yazın";
                             },
@@ -181,7 +189,6 @@ class _kayitolState extends State<kayitol> {
                             },
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: Container(
@@ -189,11 +196,10 @@ class _kayitolState extends State<kayitol> {
                                 color: Color(0xff880E4F).withOpacity(0.95),
                                 borderRadius: BorderRadius.circular(35)),
                             child: TextFormField(
-
                               validator: (oge){
                                 return oge!.length >= 6 ? null : "Şifre En az 6 karakter olmalı";
                               },
-                              // controller: _sifrecontroller,
+                              controller: _sifrecontroller,
                               decoration: InputDecoration(
                                   contentPadding:
                                   const EdgeInsets.symmetric(vertical: 20),
@@ -286,8 +292,16 @@ class _kayitolState extends State<kayitol> {
                           borderRadius: BorderRadius.circular(60)),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => girissayfasi()));
+                          if(_biseyanahtari.currentState!.validate()&&sifre==sifretekrar) {
+                            setState(() {
+                              AuthService().signUp(context,
+                                  name: _kullanicicontroller.text,
+                                  email: _emailcontroller.text,
+                                  password: _sifrecontroller.text,
+                                  sehir: _sehircontroller.text,
+                                  id: Random().nextInt(50000).toString());
+                            });
+                          }
                         },
                         child: Ink.image(
                           image:

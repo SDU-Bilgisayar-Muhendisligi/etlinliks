@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kisacaberkproje/homeview.dart';
 import 'package:kisacaberkproje/register.dart';
+import 'package:kisacaberkproje/service/auth_service.dart';
 import 'package:kisacaberkproje/sifremiunuttum.dart';
 
 
@@ -16,10 +17,14 @@ class girissayfasi extends StatefulWidget {
 
 class _girissayfasiState extends State<girissayfasi> {
   late String sifremiz,mailimiz;
-
   bool yuklenmedurumu = false;
+  final TextEditingController _emailcontroller= TextEditingController();
+  final TextEditingController _sifrecontroller= TextEditingController();
   @override
   Widget build(BuildContext context) {
+
+
+
     var Ekranbilgisi = MediaQuery.of(context);
     final double Ekranyuksekligi = Ekranbilgisi.size.height;
     final double Ekrangenisligi = Ekranbilgisi.size.width;
@@ -60,6 +65,7 @@ class _girissayfasiState extends State<girissayfasi> {
                               ..color = Colors.white,
                             fontWeight: FontWeight.bold,fontFamily: "monalisa"),
                       ),
+// Solid text as fill.
                       Text("Etkinliks",style: TextStyle(color: Color(0xff880E4F) ,fontWeight: FontWeight.bold,fontSize:70,fontFamily: "monalisa"),),
                     ],
                   ),
@@ -79,6 +85,7 @@ class _girissayfasiState extends State<girissayfasi> {
                               color: Color(0xff880E4F).withOpacity(0.95),
                               borderRadius: BorderRadius.circular(35)),
                           child: TextFormField(
+                            controller: _emailcontroller,
                             decoration: InputDecoration(
                                 contentPadding:
                                 const EdgeInsets.symmetric(vertical: 20),
@@ -89,7 +96,6 @@ class _girissayfasiState extends State<girissayfasi> {
                                 ),
                                 border: InputBorder.none,
                                 hintText: "Mail",
-
                                 hintStyle: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
@@ -113,6 +119,7 @@ class _girissayfasiState extends State<girissayfasi> {
                             color: Color(0xff880E4F).withOpacity(0.95),
                             borderRadius: BorderRadius.circular(35)),
                         child: TextFormField(
+                          controller: _sifrecontroller,
                           decoration: InputDecoration(
                               contentPadding:
                               const EdgeInsets.symmetric(vertical: 20),
@@ -132,7 +139,7 @@ class _girissayfasiState extends State<girissayfasi> {
                             color: Colors.white,
                           ),
                           obscureText: true,
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.visiblePassword,
                           textInputAction: TextInputAction.go,
                           onChanged: (oge){
                             setState(() {
@@ -141,20 +148,8 @@ class _girissayfasiState extends State<girissayfasi> {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => sifremiunuttum()));
-                            },
-                            child: Text(
-                              "Şifremi Unuttum",
-                              style: TextStyle(color: Color(0xff166cc2)),
-                            ),
-                          ),
-                        ),
+                      SizedBox(
+                        height: 15,
                       ),
                     ],
                   ),
@@ -169,9 +164,9 @@ class _girissayfasiState extends State<girissayfasi> {
                           borderRadius: BorderRadius.circular(60)),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => HomeView()));
-                          },
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => HomeView()));
+                          AuthService().singIn(context,email:_emailcontroller.text, password: _sifrecontroller.text);
+                        },
                         child: Ink.image(
                           image:
                           AssetImage("resimler/Vector.png"),
@@ -200,8 +195,7 @@ class _girissayfasiState extends State<girissayfasi> {
                             borderRadius: BorderRadius.circular(60)),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => kayitol()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => kayitol()));
                           },
                           child: Text("Kayıt Ol",style: TextStyle(
                             fontSize: 20,

@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kisacaberkproje/homeview.dart';
+import 'package:kisacaberkproje/login.dart';
+import 'package:kisacaberkproje/service/firebase_service.dart';
 
 class sifredegistir extends StatefulWidget {
   const sifredegistir({Key? key}) : super(key: key);
@@ -11,7 +14,32 @@ class sifredegistir extends StatefulWidget {
 
 class _sifredegistirState extends State<sifredegistir> {
   late String sifremiz,mailimiz;
+  final _formKey = GlobalKey<FormState>();
+  var yenisifre = "";
+  FirebaseService _firebaseService = FirebaseService();
+  final TextEditingController _sifrecontroller= TextEditingController();
+  @override
+  void dispose() {
+    _sifrecontroller.dispose();
+    super.dispose();
+  }
+  final currentUser= FirebaseAuth.instance.currentUser;
+  changePassword() async{
+    try{
+      await currentUser!.updatePassword(yenisifre);
+      FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => girissayfasi(),
+      ), // ), // Material Page Route
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.black26,
+        content: Text(" Your password has been Changed… Login again !"),
+      ), // ), // Snack Bar
+      ) ;
+    } catch(error){
 
+    }
+  }
   bool yuklenmedurumu = false;
   @override
   Widget build(BuildContext context) {
@@ -65,6 +93,7 @@ class _sifredegistirState extends State<sifredegistir> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: Container(
@@ -72,6 +101,10 @@ class _sifredegistirState extends State<sifredegistir> {
                               color: Color(0xff880E4F).withOpacity(0.95),
                               borderRadius: BorderRadius.circular(35)),
                           child: TextFormField(
+                            validator: (oge){
+                              return oge!.length >= 6 ? null : "Şifre En az 6 karakter olmalı";
+                            },
+                            controller: _sifrecontroller,
                             decoration: InputDecoration(
                                 contentPadding:
                                 const EdgeInsets.symmetric(vertical: 20),
@@ -81,7 +114,7 @@ class _sifredegistirState extends State<sifredegistir> {
                                   child: Icon(Icons.lock),
                                 ),
                                 border: InputBorder.none,
-                                hintText: "Eski Şifre",
+                                hintText: "Şifre",
                                 hintStyle: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
@@ -93,45 +126,8 @@ class _sifredegistirState extends State<sifredegistir> {
                             obscureText: true,
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.go,
-                            onChanged: (oge){
-                              setState(() {
-                                sifremiz=oge;
-                              });
-                            },
+
                           ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Color(0xff880E4F).withOpacity(0.95),
-                            borderRadius: BorderRadius.circular(35)),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              contentPadding:
-                              const EdgeInsets.symmetric(vertical: 20),
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                child: Icon(Icons.lock),
-                              ),
-                              border: InputBorder.none,
-                              hintText: "Şifre",
-                              hintStyle: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                              )),
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                          obscureText: true,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.go,
-                          onChanged: (oge){
-                            setState(() {
-                              sifremiz=oge;
-                            });
-                          },
                         ),
                       ),
                     ],
@@ -150,6 +146,10 @@ class _sifredegistirState extends State<sifredegistir> {
                           borderRadius: BorderRadius.circular(60)),
                       child: TextButton(
                         onPressed: () {
+                          yenisifre = _sifrecontroller.text;
+                          FirebaseService().updatesifre(yenisifre: yenisifre);
+                          changePassword();
+
                           Navigator.push(
                               context, MaterialPageRoute(builder: (context) => HomeView()));
                         },

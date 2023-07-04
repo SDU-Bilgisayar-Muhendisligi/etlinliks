@@ -2,12 +2,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kisacaberkproje/SifreDegistir.dart';
-import 'package:kisacaberkproje/register.dart';
+import 'SifreDegistir.dart';
+import 'kullanicibilgi.dart';
 
 
 class Profil extends StatefulWidget{
-
+  final kullanicibilgi kbilgi;
+  Profil({Key? key, required this.kbilgi}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _ProfilState();
@@ -27,7 +28,7 @@ class _ProfilState extends State<Profil>{
             padding: const EdgeInsets.only(right: 45),
             child: Stack(
               children: <Widget>[
-                // Stroked text as border.
+// Stroked text as border.
                 Text(
                   'Etkinliks',
                   style: TextStyle(
@@ -38,7 +39,7 @@ class _ProfilState extends State<Profil>{
                         ..color = Colors.white,
                       fontWeight: FontWeight.bold,fontFamily: "monalisa"),
                 ),
-                // Solid text as fill.
+// Solid text as fill.
                 Text("Etkinliks",style: TextStyle(color: Color(0xff880E4F) ,fontWeight: FontWeight.bold,fontSize:38,fontFamily: "monalisa"),),
               ],
             )
@@ -77,7 +78,7 @@ class _ProfilState extends State<Profil>{
                     child: Icon(Icons.person, size: 80, color: Colors.grey.shade300,),
                   ),
                   SizedBox(height: 20,),
-                  Text("Kisacaberk", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                  Text("${widget.kbilgi.kullanici_ad}", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
 
                   SizedBox(height: 10,),
                   Container(
@@ -113,18 +114,14 @@ class _ProfilState extends State<Profil>{
                                               horizontal: 12, vertical: 4),
                                           leading: Icon(Icons.my_location),
                                           title: Text("Şehir"),
-                                          subtitle: Text("Isparta"),
+                                          subtitle: Text("${widget.kbilgi.sehir}"),
                                         ),
                                         ListTile(
                                           leading: Icon(Icons.email),
                                           title: Text("Email"),
-                                          subtitle: Text("kisacaberk@gmail.com"),
+                                          subtitle: Text("${widget.kbilgi.e_mail}"),
                                         ),
-                                        ListTile(
-                                          leading: Icon(Icons.phone),
-                                          title: Text("Telefon"),
-                                          subtitle: Text("05321 321 32 32"),
-                                        ),
+
                                       ],
                                     ),
                                   ],

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "257237337017",
+    "project_id": "yazilimmuh-caef8",
+    "storage_bucket": "yazilimmuh-caef8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257237337017:android:a03132c98bcc2b0f622c68",
+        "android_client_info": {
+          "package_name": "com.kisacaberk.kisacaberkproje"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257237337017-1lngamnvqottidqvm05rvamc7bot1d3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZaf7zBxeE_l8hYdqdNAo4NFmqgSur0KU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257237337017-1lngamnvqottidqvm05rvamc7bot1d3d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
